@@ -16,7 +16,6 @@ public class OrderCreateTest {
     private OrderSteps orderSteps;
     private OrderResult orderResult;
     private UserSteps userSteps;
-    private UserRandom userRandom;
     private ValidatableResponse response;
 
     @Before
@@ -25,7 +24,6 @@ public class OrderCreateTest {
         orderSteps = new OrderSteps();
         userSteps = new UserSteps();
         orderResult = new OrderResult();
-        userRandom = new UserRandom();
     }
 
     @Test
@@ -40,7 +38,7 @@ public class OrderCreateTest {
     @DisplayName("Создание заказа c авторизацией и с ингредиентами")
     @Description("Проверяем, что заказ можно создать")
     public void orderCreateWithAuthorization() {
-        String accessToken = userRandom.userGetAccessToken();
+        String accessToken = UserRandom.userGetAccessToken();
         response = userSteps.userDelete(StringUtils.substringAfter(accessToken, ""));
 
         ValidatableResponse validatableResponse = orderSteps.orderCreateWithAuthorization(accessToken);

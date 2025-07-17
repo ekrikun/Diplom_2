@@ -18,7 +18,6 @@ public class OrderReceiptTest {
     private OrderSteps orderSteps;
     private OrderResult orderResult;
     private UserSteps userSteps;
-    private UserRandom userRandom;
     private ValidatableResponse response;
 
     @Before
@@ -42,7 +41,7 @@ public class OrderReceiptTest {
     @DisplayName("Проверяем получение заказа c авторизацией")
     @Description("Проверяем, что авторизированный пользователь может получить заказ")
     public void orderReceiptWithAuthorization() {
-        String accessToken = userRandom.userGetAccessToken();
+        String accessToken = UserRandom.userGetAccessToken();
 
         ValidatableResponse orderNumber = orderSteps.orderCreateWithAuthorization(accessToken);
         int orderNumberExpected = orderNumber.extract().path("order.number");

@@ -4,7 +4,6 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,9 +15,9 @@ import stellarburgers.user.UserSteps;
 public class UserTest {
     private UserSteps userSteps;
     private UserResult userResult;
-    private ValidatableResponse response;
+
     private UserCreate userCreate;
-    private String accessToken = new String();
+
 
     @Before
     @Step("Создание тестовых данных пользователя")
@@ -34,7 +33,7 @@ public class UserTest {
     public void userUniqueCreate() {
         ValidatableResponse validatableResponse = userSteps.userCreate(userCreate);
         userResult.userCreateSuccess(validatableResponse);
-        String accessToken = validatableResponse.extract().path("accessToken");
+
     }
 
     @Test
@@ -44,7 +43,7 @@ public class UserTest {
         ValidatableResponse userCreateFirst = userSteps.userCreate(userCreate);
         ValidatableResponse userCreateSecond = userSteps.userCreate(userCreate);
         userResult.userCreateExistingData(userCreateSecond);
-        String accessToken = userCreateFirst.extract().path("accessToken");
+
     }
 
     @Test
@@ -77,6 +76,6 @@ public class UserTest {
     @After
     @Step("Удаление пользователя")
     public void userDelete() {
-        userSteps.userDelete(StringUtils.substringAfter(accessToken, ""));
+
     }
 }

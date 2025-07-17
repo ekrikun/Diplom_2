@@ -10,13 +10,13 @@ import org.junit.Before;
 import org.junit.Test;
 import stellarburgers.user.*;
 
+import static org.apache.commons.lang3.StringUtils.substringAfter;
+
 public class UserLoginTest {
     private UserSteps userSteps;
     private UserResult userResult;
-    private ValidatableResponse response;
     private UserCreate userCreate;
     private UserLogin userLogin;
-    private String accessToken = new String();
 
     @Before
     @Step("Создание тестовых данных пользователя")
@@ -36,7 +36,7 @@ public class UserLoginTest {
         ValidatableResponse validatableResponse = userSteps.userLogin(userLogin);
         userResult.userLoginSuccess(validatableResponse);
 
-        String accessToken = validatableResponse.extract().path("accessToken");
+
     }
 
     @Test
@@ -50,8 +50,7 @@ public class UserLoginTest {
         ValidatableResponse loginUser = userSteps.userLogin(userLogin);
         userResult.userLoginIncorrectData(loginUser);
 
-        String accessToken = validatableResponse.extract().path("accessToken");
-    }
+          }
 
     @Test
     @DisplayName("Проверяем вход с неверным паролем")
@@ -64,8 +63,7 @@ public class UserLoginTest {
         ValidatableResponse loginUser = userSteps.userLogin(userLogin);
         userResult.userLoginIncorrectData(loginUser);
 
-        String accessToken = validatableResponse.extract().path("accessToken");
-    }
+         }
 
     @Test
     @DisplayName("Проверяем вход с пустыми данными")
@@ -79,12 +77,11 @@ public class UserLoginTest {
         ValidatableResponse loginUser = userSteps.userLogin(userLogin);
         userResult.userLoginIncorrectData(loginUser);
 
-        String accessToken = validatableResponse.extract().path("accessToken");
-    }
+          }
 
     @After
     @Step("Удаление пользователя")
     public void userDelete() {
-        userSteps.userDelete(StringUtils.substringAfter(accessToken, ""));
+
     }
 }
