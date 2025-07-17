@@ -4,7 +4,6 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import stellarburgers.order.OrderResult;
@@ -18,7 +17,7 @@ public class OrderReceiptTest {
     private OrderSteps orderSteps;
     private OrderResult orderResult;
     private UserSteps userSteps;
-    private ValidatableResponse response;
+
 
     @Before
     @Step("Создание тестовых данных пользователя")
@@ -33,8 +32,8 @@ public class OrderReceiptTest {
     @DisplayName("Проверяем получение заказа без авторизации")
     @Description("Проверяем, что заказ нельзя получить без авторизации")
     public void orderReceiptWithOutAuthorization() {
-        ValidatableResponse validatableResponse = orderSteps.orderReceiptWithOutAuthorization();
-        orderResult.orderReceiptWithOutAuthorization(validatableResponse);
+        ValidatableResponse orderReceiptWithOutAuthorization = orderSteps.orderReceiptWithOutAuthorization();
+        orderResult.orderReceiptWithOutAuthorization(orderReceiptWithOutAuthorization);
     }
 
     @Test
@@ -51,7 +50,6 @@ public class OrderReceiptTest {
         orderResult.orderReceiptWithAuthorization(orderReceiptWithAuthorization);
         assertEquals(orderNumberExpected, orderNumberActual);
 
-        response = userSteps.userDelete(StringUtils.substringAfter(accessToken, ""));
+
     }
 }
-

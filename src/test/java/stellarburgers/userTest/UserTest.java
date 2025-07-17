@@ -4,20 +4,24 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
+
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import stellarburgers.user.UserCreate;
+import stellarburgers.user.UserLogin;
 import stellarburgers.user.UserRandom;
 import stellarburgers.user.UserResult;
 import stellarburgers.user.UserSteps;
 
+import static org.junit.Assert.assertTrue;
+
 public class UserTest {
     private UserSteps userSteps;
     private UserResult userResult;
-
     private UserCreate userCreate;
-
+    private String accessToken; // Объявляем accessToken как поле класса
 
     @Before
     @Step("Создание тестовых данных пользователя")
@@ -33,7 +37,6 @@ public class UserTest {
     public void userUniqueCreate() {
         ValidatableResponse validatableResponse = userSteps.userCreate(userCreate);
         userResult.userCreateSuccess(validatableResponse);
-
     }
 
     @Test
@@ -43,7 +46,6 @@ public class UserTest {
         ValidatableResponse userCreateFirst = userSteps.userCreate(userCreate);
         ValidatableResponse userCreateSecond = userSteps.userCreate(userCreate);
         userResult.userCreateExistingData(userCreateSecond);
-
     }
 
     @Test
@@ -73,9 +75,30 @@ public class UserTest {
         userResult.userCreateError(validatableResponse);
     }
 
-    @After
-    @Step("Удаление пользователя")
-    public void userDelete() {
+    @Test
+    @DisplayName("Проверяем удаление пользователя")
+    @Description("Проверяем, что пользователь удаляется успешно")
+    public void userDeleteTest() {
+        // сначала создаем пользователя
+        ValidatableResponse createResponse = userSteps.userCreate(userCreate);
+        userResult.userCreateSuccess(createResponse);
 
+        // получаем токен пользователя для авторизации удаления
+        String token = userSteps.getAccessToken(createResponse);
+        assertTrue("Access token не должен быть пустым", token != null && !token.isEmpty());
+
+        // удаляем пользователя
+        ValidatableResponse deleteResponse = userSteps.userDelete(token);
+        userResult.userDeleteSuccess(deleteResponse);
     }
+
+    @After
+    @Step("Удаление пользователя (если token существует)")
+    public void tearDown() {
+        if (accessToken != null && !accessToken.isEmpty()) {
+            userSteps.userDelete(accessToken);
+            accessToken = null;
+        }
+    }
+
 }

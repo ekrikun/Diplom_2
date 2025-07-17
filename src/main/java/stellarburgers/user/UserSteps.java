@@ -9,6 +9,7 @@ import static stellarburgers.constantsApi.ApiEndPoints.*;
 
 public class UserSteps extends RequestSpec {
 
+    private static final String BASE_URL = "https://stellarburgers.nomoreparties.site/api"; // Объявляем константу BASE_URL
     @Step("Регистрация нового пользователя /api/auth/register")
     public ValidatableResponse userCreate(UserCreate userCreate) {
         return requestSpec()
@@ -65,12 +66,22 @@ public class UserSteps extends RequestSpec {
                 .then();
     }
 
-    @Step("Удаление пользователя /api/auth/user")
-    public ValidatableResponse userDelete(String accessToken){
+    // Метод извлекает токен из ответа создания/логина пользователя
+    public String getAccessToken(ValidatableResponse response) {
+        String token = response.extract().path("accessToken");
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        return token;
+    }
+
+    // Метод для удаления пользователя по accessToken
+    public ValidatableResponse userDelete(String accessToken) {
         return requestSpec()
-                .auth().oauth2(accessToken)
+                .header("Authorization", "Bearer " + accessToken) // Ensure "Bearer " prefix
                 .when()
-                .delete(USER_DELETE)
-                .then();
+                .delete(BASE_URL + "/auth/user") // corrected the URL
+                .then()
+                .log().ifError();
     }
 }

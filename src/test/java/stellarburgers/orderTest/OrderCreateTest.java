@@ -4,7 +4,6 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import stellarburgers.order.OrderResult;
@@ -16,7 +15,6 @@ public class OrderCreateTest {
     private OrderSteps orderSteps;
     private OrderResult orderResult;
     private UserSteps userSteps;
-    private ValidatableResponse response;
 
     @Before
     @Step("Создание тестовых данных пользователя")
@@ -39,7 +37,6 @@ public class OrderCreateTest {
     @Description("Проверяем, что заказ можно создать")
     public void orderCreateWithAuthorization() {
         String accessToken = UserRandom.userGetAccessToken();
-        response = userSteps.userDelete(StringUtils.substringAfter(accessToken, ""));
 
         ValidatableResponse validatableResponse = orderSteps.orderCreateWithAuthorization(accessToken);
         orderResult.orderCreateSuccess(validatableResponse);

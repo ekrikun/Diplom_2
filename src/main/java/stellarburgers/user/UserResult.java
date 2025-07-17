@@ -57,5 +57,21 @@ public class UserResult {
                 .statusCode(SC_UNAUTHORIZED)
                 .body("message", equalTo("You should be authorised"));
     }
+    @Step("Проверка неудачного логина пользователя")
+    public void userLoginFailed(ValidatableResponse response) {
+        response.assertThat()
+                .statusCode(401)
+                .body("success", equalTo(false))
+                .body("message", equalTo("Incorrect password"));
+    }
+
+    @Step("Проверка успешного удаления пользователя")
+    public void userDeleteSuccess(ValidatableResponse response) {
+        response.assertThat()
+                .statusCode(202)
+                .body("success", equalTo(true))
+                .body("message", equalTo("User successfully removed"));
+    }
+
 }
 
